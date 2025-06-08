@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SABOREARTE Lanches - Sistema de Gestão</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                <span>SABOREARTE</span>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a class="nav-link active" onclick="showSection('dashboard')" data-section="dashboard">
+                            <i class="nav-icon fas fa-chart-line"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="showSection('pedidos')" data-section="pedidos">
+                            <i class="nav-icon fas fa-receipt"></i>
+                            <span>Pedidos</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="showSection('cozinha')" data-section="cozinha">
+                            <i class="nav-icon fas fa-fire"></i>
+                            <span>Cozinha</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="showSection('produtos')" data-section="produtos">
+                            <i class="nav-icon fas fa-hamburger"></i>
+                            <span>Produtos</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="showSection('estoque')" data-section="estoque">
+                            <i class="nav-icon fas fa-boxes"></i>
+                            <span>Estoque</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="showSection('delivery')" data-section="delivery">
+                            <i class="nav-icon fas fa-truck"></i>
+                            <span>Delivery</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name">Jader Braga</div>
+                        <div class="user-role">Proprietário</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="sidebar-toggle" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="header-title" id="page-title">Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <div class="header-actions">
+                        <button class="header-btn" onclick="toggleNotifications()" title="Notificações">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge" id="notification-count">0</span>
+                        </button>
+                        <button class="header-btn" onclick="showHelp()" title="Ajuda">
+                            <i class="fas fa-question-circle"></i>
+                        </button>
+                    </div>
+                    <div class="date-time" id="datetime"></div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content">
+                <!-- Dashboard -->
+                <section id="dashboard" class="section active">
+                    <div class="section-header">
+                        <h2>Visão Geral</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-primary" onclick="atualizarDashboard()">
+                                <i class="fas fa-sync-alt"></i>
+                                Atualizar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-info">
+                                    <div class="stat-value" id="pedidos-hoje">0</div>
+                                    <div class="stat-label">Pedidos Hoje</div>
+                                    <div class="stat-change positive" id="pedidos-change">+12%</div>
+                                </div>
+                                <div class="stat-icon primary">
+                                    <i class="fas fa-receipt"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-info">
+                                    <div class="stat-value" id="vendas-hoje">R$ 0,00</div>
+                                    <div class="stat-label">Vendas Hoje</div>
+                                    <div class="stat-change positive" id="vendas-change">+8%</div>
+                                </div>
+                                <div class="stat-icon success">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-info">
+                                    <div class="stat-value" id="pedidos-abertos">0</div>
+                                    <div class="stat-label">Pedidos em Aberto</div>
+                                    <div class="stat-change" id="abertos-change">-</div>
+                                </div>
+                                <div class="stat-icon warning">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-info">
+                                    <div class="stat-value" id="delivery-andamento">0</div>
+                                    <div class="stat-label">Delivery em Andamento</div>
+                                    <div class="stat-change" id="delivery-change">-</div>
+                                </div>
+                                <div class="stat-icon info">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>Pedidos Recentes</h3>
+                                <button class="btn btn-ghost" onclick="showSection('pedidos')">
+                                    Ver Todos
+                                </button>
+                            </div>
+                            <div class="card-content">
+                                <div id="pedidos-recentes">
+                                    <div class="empty-state">
+                                        <i class="fas fa-receipt"></i>
+                                        <p>Nenhum pedido registrado hoje.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>Produtos Mais Vendidos</h3>
+                                <select class="form-select" id="periodo-produtos">
+                                    <option value="hoje">Hoje</option>
+                                    <option value="semana">Esta Semana</option>
+                                    <option value="mes">Este Mês</option>
+                                </select>
+                            </div>
+                            <div class="card-content">
+                                <div id="produtos-vendidos">
+                                    <div class="empty-state">
+                                        <i class="fas fa-hamburger"></i>
+                                        <p>Nenhuma venda registrada.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Pedidos -->
+                <section id="pedidos" class="section">
+                    <div class="section-header">
+                        <h2>Gestão de Pedidos</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-secondary" onclick="limparPedido()">
+                                <i class="fas fa-broom"></i>
+                                Limpar
+                            </button>
+                            <button class="btn btn-primary" onclick="focusNovoPedido()">
+                                <i class="fas fa-plus"></i>
+                                Novo Pedido
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-container">
+                        <div class="form-header">
+                            <h3>Novo Pedido</h3>
+                            <div class="pedido-numero">
+                                Pedido: <span id="proximo-numero">#0001</span>
+                            </div>
+                        </div>
+                        
+                        <form id="form-pedido">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Cliente</label>
+                                    <input type="text" id="cliente-nome" placeholder="Nome do cliente" autocomplete="off">
+                                </div>
+                                <div class="form-group">
+                                    <label>Tipo de Pedido</label>
+                                    <select id="tipo-pedido" class="form-select">
+                                        <option value="balcao">🏪 Balcão</option>
+                                        <option value="delivery">🚚 Delivery</option>
+                                        <option value="retirada">📦 Retirada</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div id="delivery-info" class="delivery-section" style="display: none;">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label>Endereço de Entrega</label>
+                                        <textarea id="endereco" placeholder="Rua, número, bairro, referências..." rows="2"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Telefone</label>
+                                        <input type="tel" id="telefone" placeholder="(88) 99999-9999">
+                                    </div>
+                                </div>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label>Taxa de Entrega</label>
+                                        <input type="number" id="taxa-entrega" value="5.00" step="0.01" min="0">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Tempo Estimado</label>
+                                        <select id="tempo-entrega" class="form-select">
+                                            <option value="30">30 minutos</option>
+                                            <option value="45">45 minutos</option>
+                                            <option value="60">1 hora</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="produtos-section">
+                                <h4>Adicionar Produtos</h4>
+                                <div class="form-grid produto-add">
+                                    <div class="form-group">
+                                        <label>Produto</label>
+                                        <select id="produto-select" class="form-select">
+                                            <option value="">Selecione um produto</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Quantidade</label>
+                                        <div class="quantity-control">
+                                            <button type="button" class="qty-btn" onclick="alterarQuantidade(-1)">-</button>
+                                            <input type="number" id="quantidade" value="1" min="1" max="99">
+                                            <button type="button" class="qty-btn" onclick="alterarQuantidade(1)">+</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Observações</label>
+                                        <input type="text" id="item-observacoes" placeholder="Ex: sem cebola, ponto da carne...">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>&nbsp;</label>
+                                        <button type="button" class="btn btn-primary btn-block" onclick="adicionarItem()">
+                                            <i class="fas fa-plus"></i>
+                                            Adicionar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pedido-resumo">
+                                <h4>Resumo do Pedido</h4>
+                                <div class="itens-container">
+                                    <div id="itens-pedido" class="itens-lista">
+                                        <div class="empty-state">
+                                            <i class="fas fa-shopping-cart"></i>
+                                            <p>Nenhum item adicionado</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="pedido-totais">
+                                    <div class="total-linha">
+                                        <span>Subtotal:</span>
+                                        <span id="subtotal-pedido">R$ 0,00</span>
+                                    </div>
+                                    <div class="total-linha" id="linha-taxa" style="display: none;">
+                                        <span>Taxa de Entrega:</span>
+                                        <span id="valor-taxa">R$ 0,00</span>
+                                    </div>
+                                    <div class="total-linha total-final">
+                                        <span>Total:</span>
+                                        <span id="total-pedido">R$ 0,00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary" onclick="limparPedido()">
+                                    <i class="fas fa-times"></i>
+                                    Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-check"></i>
+                                    Finalizar Pedido
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="pedidos-lista">
+                        <div class="lista-header">
+                            <h3>Pedidos do Dia</h3>
+                            <div class="lista-filters">
+                                <select class="form-select" id="filtro-status">
+                                    <option value="">Todos os Status</option>
+                                    <option value="novo">Novos</option>
+                                    <option value="preparando">Em Preparo</option>
+                                    <option value="pronto">Prontos</option>
+                                    <option value="em_rota">Em Rota</option>
+                                    <option value="entregue">Entregues</option>
+                                </select>
+                                <select class="form-select" id="filtro-tipo">
+                                    <option value="">Todos os Tipos</option>
+                                    <option value="balcao">Balcão</option>
+                                    <option value="delivery">Delivery</option>
+                                    <option value="retirada">Retirada</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="lista-pedidos-dia" class="pedidos-container">
+                            <div class="empty-state">
+                                <i class="fas fa-receipt"></i>
+                                <p>Nenhum pedido registrado hoje.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Cozinha -->
+                <section id="cozinha" class="section">
+                    <div class="section-header">
+                        <h2>Painel da Cozinha</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-secondary" onclick="toggleSomNotificacao()">
+                                <i class="fas fa-volume-up" id="sound-icon"></i>
+                                Som
+                            </button>
+                            <button class="btn btn-primary" onclick="atualizarPainelCozinha()">
+                                <i class="fas fa-sync-alt"></i>
+                                Atualizar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="kitchen-stats">
+                        <div class="kitchen-stat">
+                            <div class="stat-number" id="pedidos-fila">0</div>
+                            <div class="stat-text">Na Fila</div>
+                        </div>
+                        <div class="kitchen-stat">
+                            <div class="stat-number" id="pedidos-preparo">0</div>
+                            <div class="stat-text">Em Preparo</div>
+                        </div>
+                        <div class="kitchen-stat">
+                            <div class="stat-number" id="tempo-medio-preparo">0</div>
+                            <div class="stat-text">Tempo Médio (min)</div>
+                        </div>
+                        <div class="kitchen-stat">
+                            <div class="stat-number" id="pedidos-atrasados-count">0</div>
+                            <div class="stat-text">Atrasados</div>
+                        </div>
+                    </div>
+
+                    <div class="kitchen-grid" id="kitchen-orders">
+                        <div class="empty-state">
+                            <i class="fas fa-fire"></i>
+                            <p>Nenhum pedido em preparo no momento.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Produtos -->
+                <section id="produtos" class="section">
+                    <div class="section-header">
+                        <h2>Gestão de Produtos</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-secondary" onclick="exportarProdutos()">
+                                <i class="fas fa-download"></i>
+                                Exportar
+                            </button>
+                            <button class="btn btn-primary" onclick="toggleFormProduto()">
+                                <i class="fas fa-plus"></i>
+                                Novo Produto
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-container" id="form-produto-container" style="display: none;">
+                        <div class="form-header">
+                            <h3 id="form-produto-title">Cadastrar Produto</h3>
+                            <button class="btn btn-ghost" onclick="toggleFormProduto()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        
+                        <form id="form-produto">
+                            <input type="hidden" id="produto-id">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Nome do Produto *</label>
+                                    <input type="text" id="produto-nome" required placeholder="Ex: X-Burger Especial">
+                                </div>
+                                <div class="form-group">
+                                    <label>Categoria *</label>
+                                    <select id="produto-categoria" required class="form-select">
+                                        <option value="">Selecione uma categoria</option>
+                                        <option value="lanches">🍔 Lanches</option>
+                                        <option value="bebidas">🥤 Bebidas</option>
+                                        <option value="porcoes">🍟 Porções</option>
+                                        <option value="sobremesas">🍰 Sobremesas</option>
+                                        <option value="combos">🍽️ Combos</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Preço *</label>
+                                    <div class="input-group">
+                                        <span class="input-prefix">R$</span>
+                                        <input type="number" id="produto-preco" step="0.01" min="0" required placeholder="0,00">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Tempo de Preparo (min)</label>
+                                    <input type="number" id="produto-tempo" min="1" max="120" placeholder="15">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Descrição</label>
+                                <textarea id="produto-descricao" rows="3" placeholder="Descreva os ingredientes e características do produto..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Status</label>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="produto-ativo" checked>
+                                        <span class="checkmark"></span>
+                                        Produto Ativo
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="produto-destaque">
+                                        <span class="checkmark"></span>
+                                        Produto em Destaque
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary" onclick="toggleFormProduto()">
+                                    Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i>
+                                    Salvar Produto
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="produtos-container">
+                        <div class="produtos-filters">
+                            <div class="search-container">
+                                <input type="text" id="busca-produtos" placeholder="Buscar produtos..." autocomplete="off">
+                                <i class="fas fa-search search-icon"></i>
+                            </div>
+                            <select class="form-select" id="filtro-categoria">
+                                <option value="">Todas as Categorias</option>
+                                <option value="lanches">Lanches</option>
+                                <option value="bebidas">Bebidas</option>
+                                <option value="porcoes">Porções</option>
+                                <option value="sobremesas">Sobremesas</option>
+                                <option value="combos">Combos</option>
+                            </select>
+                            <select class="form-select" id="filtro-status-produto">
+                                <option value="">Todos os Status</option>
+                                <option value="ativo">Ativos</option>
+                                <option value="inativo">Inativos</option>
+                            </select>
+                        </div>
+
+                        <div class="table-container">
+                            <table class="produtos-table">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Nome</th>
+                                        <th>Categoria</th>
+                                        <th>Preço</th>
+                                        <th>Tempo</th>
+                                        <th>Status</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lista-produtos">
+                                    <tr>
+                                        <td colspan="7" class="empty-state">
+                                            <i class="fas fa-hamburger"></i>
+                                            <p>Nenhum produto cadastrado.</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Estoque -->
+                <section id="estoque" class="section">
+                    <div class="section-header">
+                        <h2>Controle de Estoque</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-secondary" onclick="exportarEstoque()">
+                                <i class="fas fa-download"></i>
+                                Exportar
+                            </button>
+                            <button class="btn btn-warning" onclick="alertasEstoque()">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Alertas
+                            </button>
+                            <button class="btn btn-primary" onclick="toggleMovimentacaoEstoque()">
+                                <i class="fas fa-plus"></i>
+                                Nova Movimentação
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="estoque-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon danger">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <div class="stat-value" id="produtos-esgotados">0</div>
+                                <div class="stat-label">Esgotados</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon warning">
+                                <i class="fas fa-battery-quarter"></i>
+                            </div>
+                            <div class="stat-info">
+                                <div class="stat-value" id="produtos-baixo">0</div>
+                                <div class="stat-label">Estoque Baixo</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon success">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <div class="stat-value" id="produtos-ok">0</div>
+                                <div class="stat-label">Em Dia</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-container" id="form-estoque-container" style="display: none;">
+                        <div class="form-header">
+                            <h3>Movimentação de Estoque</h3>
+                            <button class="btn btn-ghost" onclick="toggleMovimentacaoEstoque()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        
+                        <form id="form-estoque">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Produto *</label>
+                                    <select id="estoque-produto" required class="form-select">
+                                        <option value="">Selecione um produto</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Tipo de Movimentação *</label>
+                                    <select id="estoque-operacao" required class="form-select">
+                                        <option value="entrada">📈 Entrada (Compra/Reposição)</option>
+                                        <option value="saida">📉 Saída (Venda/Perda)</option>
+                                        <option value="ajuste">⚖️ Ajuste de Inventário</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Quantidade *</label>
+                                    <input type="number" id="estoque-quantidade" min="1" required placeholder="0">
+                                </div>
+                                <div class="form-group">
+                                    <label>Motivo</label>
+                                    <input type="text" id="estoque-motivo" placeholder="Ex: Compra, Venda, Perda, Inventário...">
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary" onclick="toggleMovimentacaoEstoque()">
+                                    Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i>
+                                    Registrar Movimentação
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="estoque-container">
+                        <div class="estoque-filters">
+                            <div class="search-container">
+                                <input type="text" id="busca-estoque" placeholder="Buscar no estoque..." autocomplete="off">
+                                <i class="fas fa-search search-icon"></i>
+                            </div>
+                            <select class="form-select" id="filtro-status-estoque">
+                                <option value="">Todos os Status</option>
+                                <option value="esgotado">Esgotados</option>
+                                <option value="baixo">Estoque Baixo</option>
+                                <option value="normal">Normal</option>
+                            </select>
+                        </div>
+
+                        <div class="table-container">
+                            <table class="estoque-table">
+                                <thead>
+                                    <tr>
+                                        <th>Produto</th>
+                                        <th>Categoria</th>
+                                        <th>Estoque Atual</th>
+                                        <th>Estoque Mínimo</th>
+                                        <th>Última Movimentação</th>
+                                        <th>Status</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lista-estoque">
+                                    <tr>
+                                        <td colspan="7" class="empty-state">
+                                            <i class="fas fa-boxes"></i>
+                                            <p>Nenhum produto cadastrado no estoque.</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Delivery -->
+                <section id="delivery" class="section">
+                    <div class="section-header">
+                        <h2>Gestão de Delivery</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-primary" onclick="atualizarDelivery()">
+                                <i class="fas fa-sync-alt"></i>
+                                Atualizar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-info">
+                                    <div class="stat-value" id="delivery-pendentes">0</div>
+                                    <div class="stat-label">Pendentes</div>
+                                </div>
+                                <div class="stat-icon warning">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-info">
+                                    <div class="stat-value" id="delivery-rota">0</div>
+                                    <div class="stat-label">Em Rota</div>
+                                </div>
+                                <div class="stat-icon info">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-info">
+                                    <div class="stat-value" id="delivery-entregues">0</div>
+                                    <div class="stat-label">Entregues Hoje</div>
+                                </div>
+                                <div class="stat-icon success">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-info">
+                                    <div class="stat-value" id="tempo-medio-entrega">0</div>
+                                    <div class="stat-label">Tempo Médio (min)</div>
+                                </div>
+                                <div class="stat-icon primary">
+                                    <i class="fas fa-stopwatch"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="delivery-container">
+                        <div class="delivery-filters">
+                            <select class="form-select" id="filtro-status-delivery">
+                                <option value="">Todos os Status</option>
+                                <option value="pronto">Prontos para Entrega</option>
+                                <option value="em_rota">Em Rota</option>
+                                <option value="entregue">Entregues</option>
+                            </select>
+                            <select class="form-select" id="filtro-periodo-delivery">
+                                <option value="hoje">Hoje</option>
+                                <option value="ontem">Ontem</option>
+                                <option value="semana">Esta Semana</option>
+                            </select>
+                        </div>
+
+                        <div id="lista-delivery" class="delivery-list">
+                            <div class="empty-state">
+                                <i class="fas fa-truck"></i>
+                                <p>Nenhum pedido de delivery no momento.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Impressão de Comanda -->
+    <div id="modal-comanda" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Comanda do Pedido</h3>
+                <button class="close-btn" onclick="fecharModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="comanda-content" class="comanda">
+                <!-- Conteúdo da comanda será inserido aqui -->
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="fecharModal()">
+                    <i class="fas fa-times"></i>
+                    Fechar
+                </button>
+                <button class="btn btn-primary" onclick="imprimirComanda()">
+                    <i class="fas fa-print"></i>
+                    Imprimir
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notificações Toast -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Audio para notificações -->
+    <audio id="notification-sound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" type="audio/wav">
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
